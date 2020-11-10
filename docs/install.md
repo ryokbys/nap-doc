@@ -9,8 +9,11 @@ the Github site, [https://github.com/ryokbys/nap](https://github.com/ryokbys/nap
 
 ## Requirements
 
-*pmd* and *fitpot* can be executed in Unix/Linux, macOS X, and Windows with using a
-Fortran compiler and an MPI library (*mpif90*).
+*pmd* and *fitpot* can be executed in Unix/Linux, macOS X, and Windows with using the following tools,
+
+- Fortran compiler (GNU's gfortran, Intel Fortran, PGI Fortran, or FUJITSU fortran)
+- MPI library (OpenMPI, or Intel MPI)
+
 
 *nappy* utility and *fp.py* program can be used with *Python-3.x.x*, and are dependent on some python packages such as,
 
@@ -180,6 +183,15 @@ In an example directory, you can run *pmd* program by using *mpirun* command as,
 
 You can test whether the *pmd* program is built correctly or does not degrade after development by comparing its standard output with `out.pmd.REF` file in the directory.
 
+For example, the potential energies that can be extracted from `out.pmd.REF` as,
+
+    $ grep 'Potential energy' out.pmd.REF
+    Potential energy=       -463.72014 eV =     -8.587 eV/atom
+    Potential energy=       -460.77567 eV =     -8.533 eV/atom
+
+are the potential energies of the system before and after the MD run. These should be identical in the test run.
+And also, kinetic energy, puressure and temperature of the system after the MD run are shown within the last 10 lines that can be used for the test.
+
 ### Test for *fitpot* program
 
 In the `nap/examples/fitpot_DNN_SiO` directory, you can test the *fitpot* program by using *mpirun* command as,
@@ -187,6 +199,8 @@ In the `nap/examples/fitpot_DNN_SiO` directory, you can test the *fitpot* progra
     $ mpirun -np 1 /path/to/fitpot
 
 by comparing its standard output with `out.fitpot.REF`.
+
+For example, RMSEs of energy, force and stress are shown in lines starting with `ENERGY:`, `FORCE:` and `STRESS:`, respectively, whose last values are within the last 10 lines. These values should be identical or resonably close in the test run.
 
 ### Test for *fp.py* program
 
@@ -200,3 +214,8 @@ In the `nap/examples/fp_LZP` directory, you can test the *fp.py* program as,
     $ python /path/to/nap/nappy/fitpot/fp.py --nproc=4 
 
 by comparing its standard output with `out.fp.REF`.
+
+Since the *fp.py* uses random numbers in the optimization and currently they are not the same in every run of *fp.py*, the resulting numbers are not necessarily identical to `out.fp.REF`. To verify that *fp.py* is performed correctly, check the following,
+
+1. Each line starting with `   iid,Lr,Lth,Lvol,Llat,L=` shows the loss values obtained using the randomly genereated parameters. These values can be different from `out.fp.REF`. But if these values are 100.0000 or NaN, something is wrong.
+2. Lines starting with ` step,time,best,vars=` show the current state of optimization process. And the current best value (`6.2877` in `fp_LZP/out.fp.REF`) should be the minimum one among `L` values in the above lines.
