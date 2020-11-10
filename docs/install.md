@@ -207,7 +207,7 @@ For example, RMSEs of energy, force and stress are shown in lines starting with 
 There are two examples for *fp.py* program,
 
 - `nap/examples/fp_LZP` -- fit potential parameters using DF-matching mode (see [fp.py documentation](./fp.md#Reference data for fp.py))
-- `nap/examples/fp_LAZP` -- fit potential parameters using whatever mode
+- `nap/examples/fp_LAZP` -- fit potential parameters using any-target mode
 
 In the `nap/examples/fp_LZP` directory, you can test the *fp.py* program as,
 

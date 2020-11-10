@@ -95,13 +95,13 @@ Currently (July 2020), *fp.py* can run in two different modes,
 
 -   **distribution function (DF)-matching mode** -- RDF, ADF,
     equilibrium volume and lattice constants are adopted as targets.
--   **whatever mode** -- any quantity that is computable can be used
+-   **any-target mode** -- any quantity that is computable can be used
     as a target.
 
 In the **DF-matching mode**, the reference data formats of these targets
 are different.
 
-On the other hand, in the **whatever mode**, the format of reference
+On the other hand, in the **any-target mode**, the format of reference
 data is fixed.
 
 ### Reference data format in DF-matching mode
@@ -109,7 +109,7 @@ data is fixed.
 See the format of each target (RDF, ADF, vol and lat) in
 `nap/examples/fp_LZP/`.
 
-### Reference data format in whatever mode
+### Reference data format in any-target mode
 
 The format of reference data as follows, :
 
@@ -131,9 +131,9 @@ The format of reference data as follows, :
 
 Control parameters for *fp.py* are read from `in.fitpot` in the working
 directory. There are some diffierences between **DF-matching mode** and
-**whatever mode** in `in.fitpot`.
+**any-target mode** in `in.fitpot`.
 
-First, in the case of **whatever mode**, the `in.fitpot` in the example
+First, in the case of **any-target mode**, the `in.fitpot` in the example
 `nap/examples/fp_LATP/` is shown below,
 
     num_iteration      100
@@ -255,7 +255,7 @@ evaluating the loss function of each nest (individual). :
 
 -   `--pairs` and `--triplets` should be correctly set in `rdf.py` and
     `adf.py` as well as `--specorder` options.
--   `--out4fp` option is required to write **whatever mode** format of
+-   `--out4fp` option is required to write **any-target mode** format of
     reference data. On the other hand, in the case of **DF-matching
     mode**, `--out4fp` option should not be used.
 
