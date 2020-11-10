@@ -180,6 +180,25 @@ large scale simulation.
 
 ------------------------------------------------------------------------
 
+### dump_aux_order
+
+- Default: `ekin epot sxx syy szz syz sxz sxy`
+
+Order of atomic attributes written in each line of atom data following atomic positions
+in the case LAMMMPS *dump*-format is chosen for output.
+
+Available atomic attributes are as follows:
+
+- `ekin`/`eki` -- kinetic energy
+- `epot`/`epi` -- potential energy
+- `s??` -- stress tensor component, `??` is either `xx`,`yy`,`zz`,`yz`,`xz`,`xy`
+- `chg` -- charge
+- `chi` -- electronegativity
+- `tei` -- electronic temperature
+- `clr` -- color charge
+
+------------------------------------------------------------------------
+
 ### force_type
 
 - Default: `None`
@@ -193,7 +212,7 @@ below:
 - `Ito3_WHe` : EAM potential for W-He system made by Ito et al. at NIFS.
 - `Morse` : Morse potential that requires an input files `in.params.Morse`.
 - `Coulomb` : Coulomb potential that requires an input files `in.params.Coulomb`.
-- `DNN` : Neural-network potential that requires two input files `in.params.desc` and `in.params.NN2`.
+- `DNN` : Neural-network potential that requires two input files `in.params.desc` and `in.params.NN`.
 
 ------------------------------------------------------------------------
 
@@ -404,3 +423,29 @@ Boundary conditions for each axis, 123.
 
 - `p`: periodic boundary condition
 - `f`: free boundary condition
+
+------------------------------------------------------------------------
+
+### flag_clrchg
+
+- Default: `.false.`
+
+Flag whether or not to use color charge non-equilibrium MD
+
+------------------------------------------------------------------------
+
+### spcs_clrchg
+
+- Default: `non`
+
+One species name that color charges are assigned must be specified.
+Currently only one species can be treated, and +1 or -1 is assigned to each atom
+where the sum of these colr charges are zero in the system.
+
+------------------------------------------------------------------------
+
+### clrfield
+
+- Default: `0d0  0d0  0d0`
+
+The field applied to color charges.

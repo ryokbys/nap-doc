@@ -6,40 +6,38 @@ have to use those utilities by calling them directly from the shell.
 
 ## Setup
 
-*nappy* should work with python-2.7 and python-3 series. But, as the
-maintenance of python-2.x series have stopped, it is recommended to use
-python-3.
-
-*nappy* requires the following packages, which can be installed using
-`pip` command,
-
-- numpy
-- pandas
-- [docopt](http://docopt.org)
-- [ASE](https://wiki.fysik.dtu.dk/ase/index.html)
-
-To use *nappy* in python program, it is required to add a path to
-`nap/nappy` directory to the environment variable `PYTHONPATH`. In case
-of `bash`, you can achieve this by adding the following line to
-`~/.bash_profile`,
-
-``` {.bash}
-export PYTHONPATH=${PYTHONPATH}:/path/to/nap
-```
-
-You can check whether the path to `nappy` is added to `PYTHONPATH` by
-the following command, :
-
-    $ python -c 'import nappy; print(nappy.__file__)'
-
+See [Install](./install.md).
 
 -----
 
 ## Quick start
 
+### `napsys.py` command
 
-Once *nappy* is installed, do the following code on *ipython* or
-*jupyter notebook*,
+Once *nappy* is installed correctly, you can use `napsys.py` as an utility command.
+
+It is recommended to make symlink of `/path/to/nap/nappy/napsys.py` in some directory lised in the PATH environment,
+so that it is found by typing just `napsys.py`.
+
+The following commend will give you some information about the system described in `pmdini`.
+```bash
+$ napsys.py analyze /path/to/nap/example/test_W/pmdini
+```
+If you want to convert the file between some formats available in *nappy*,
+the following command convert `infile` to the format guessed from the filename `outfile`,
+such as `POSCAR`, `dump_0`, or `pmd_0`.
+```bash
+$ napsys.py convert infile outfile
+```
+To show the help message,
+```bash
+$ napsys.py -h
+```
+
+---
+
+### nappy on jupyter or ipython
+do the following code on *jupyter notebook* or *ipython*,
 
 ```python
 from nappy.napsys import NAPSystem, analyze

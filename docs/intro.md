@@ -1,9 +1,8 @@
 # Introduction
 
-*pmd* is an acronym of **parallel molecular dynamics** which means that
-molecular dynamics (MD) using spatial decomposition technique on
-parallel (ditributed-memory) computers. And *pmd* is a part of the
-**Nagoya atomistic-simulation package (nap)**.
+The main program in this package, *pmd*, is an acronym of **parallel molecular dynamics**,
+that is, molecular dynamics (MD) using spatial decomposition technique on
+parallel (ditributed-memory) computers.
 
 The main features of *pmd* are the following:
 
@@ -33,12 +32,3 @@ want to use *pmd* or **nap** for your specific purpose.
 Bug reports and questions about *pmd* and **nap** are welcome, but I am
 afraid that I might not be able to respond all the reports or questions.
 
-
-## Requirements
-
-*pmd* can be executed in Unix/Linux, macOS X, and Windows with using a
-Fortran compiler and an MPI library.
-
-For some analysis tools written in Python language, you may also need
-*Python 3.* and some python-utilities such as *numpy*, *scipy*,
-*pandas*, *docopt* and *ASE*.

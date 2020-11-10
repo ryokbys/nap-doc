@@ -95,7 +95,7 @@ multiplying $\Delta t^2$ in the velocity Verlet loop.
 
 ------------------------------------------------------------------------
 
-### Velocity Verlet {#vv}
+### Velocity Verlet
 
 Basically MD with the velocity Verlet algorithm is very simple:
 
