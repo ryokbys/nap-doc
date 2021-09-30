@@ -21,6 +21,10 @@ files can be found in `pmd/force_params/DNN_??????` directories.
 
 ## in.params.desc
 
+Currently (2021-09-30), there are two choices for the descriptor: Behler-Parrinello type symmetry functions and Chebyshev polynomial proposed by Artrith et al.
+
+### Symmetry functions as a descriptor
+
 !!! Note
     The format of `in.params.desc` file has changed from the previous one at
     around May 2019, where the species are written directly by their acronym
@@ -28,7 +32,7 @@ files can be found in `pmd/force_params/DNN_??????` directories.
     previous-format `in.params.desc`, you should modify it by replacing
     species-ID with species name.
 
-The format of `in.params.desc` is like the following,
+The format of `in.params.desc` using the symmetry functions is like the following,
 
     2    20
     1    W   W   10.000    2.000
@@ -42,12 +46,34 @@ The format of `in.params.desc` is like the following,
     2    W   W   -0.700
     ...
 
--   1st line has two entries, *number of speceis* and *number of
+-   1st line -- *number of speceis* and *number of
     descriptors*.
--   Following lines have each descriptor information, the 1st entry is
+-   The following lines have each descriptor information, the 1st entry is
     the type of descriptor, 2nd and 3rd are species of interaction pair,
     from the 4th to the end are parameters of the descriptor. The number
     of parameters depend on the type of descriptor.
+
+### Chebyshev polynomial as a descriptor
+
+The format of `in.params.desc` in case of Chebyshev polynomial is as follows,
+
+    !  Chebyshev:  T
+    !
+    2  40
+    2-body   10   5.0
+    3-body   10   3.0
+    Weight   Artrith
+        1     1.0
+        2    -1.0
+
+- 1st and 2nd lines -- Comment lines in which Chebyshev flag should be set `T`.
+- 3rd line -- *number of species* and *number of terms*
+- 4th line -- declaration of *2-body* terms, *num of 2-body terms*, and *cutoff radius*
+- 5th line -- declaration of *3-body* terms, *num of 3-body terms*, and *cutoff radius*
+- 6th line -- Specify the type of weight.
+- after 6th line -- *species ID* and *weight for the species*
+
+The *number of terms* should be 2 times (*num of 2-body terms* + *num of 3-body terms*) in case of *num of species* is greater than 1, and it should be (*num of 2-body terms* + *num of 3-body terms*) otherwise.
 
 ## in.params.DNN
 

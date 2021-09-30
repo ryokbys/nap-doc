@@ -9,18 +9,14 @@ The main features of *pmd* are the following:
 - several interatomic potentials for solid state systems are available;
 - **Deep neural-network (DNN) interatomic potential**;
 - **QEq** or **variable charge** Coulombic potential;
-- parallel computation using spatial decomposition technique;
-- efficient searching of neighbor atoms using linked-list cell
-  method;
-- structure relaxation using simple velocity damping or **FIRE**
-  algorithm;
+- MPI parallel computation using spatial decomposition technique and hybrid parallelization using OpenMP;
+- efficient searching of neighbor atoms using linked-cell list method;
+- structure relaxation using simple velocity damping or **FIRE** algorithm;
 - thermostats: Berendsen and Langevin;
 - barostat: Berendsen;
-- **variable-timestep** MD for high-energy ion-bombardment
-  simulation;
-- **non-equilibrium MD (NEMD)** for heat flux simulation;
-- **two-temperature model MD (TTM-MD)** for laser-ablation
-  simulation.
+- **variable-timestep** MD for high-energy ion-bombardment simulation;
+- **non-equilibrium MD (NEMD)** for heat flux and/or ion flux simulation;
+- **two-temperature model MD (TTM-MD)** for laser-ablation simulation.
 
 Since this program has been developed for the purpose of personal
 research tool, there are not so many functionalities. And there are some

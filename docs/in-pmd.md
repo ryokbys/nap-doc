@@ -14,6 +14,7 @@ must be described in `in.pmd`.
     #
       io_format         ascii
       print_level       1
+      num_omp_threads   4
 
       time_interval     2d0
       num_iteration     1000
@@ -65,9 +66,18 @@ Here, lines begin with `!` or `#` are treated as comment lines.
 Number of division in x, y, or z direction. If one of these is
 non-positive (`<=0`), these numbers are automatically estimated from the
 system size and the number of MPI processes used. If all of these are
-positive, specified values are used. The product of these, $xyz$, should
-be the same as the number of divided atom-configuration files and
-computer nodes specified when executing *mpirun* or *mpiexec* command.
+positive, specified values are used.
+
+------------------------------------------------------------------------
+
+### num_omp_threads
+
+- Default: `-1`
+
+Number of threads for OpenMP parallelization. If not positive, use the value given by the environment variable `OMP_NUM_THREADS`.
+This is only effective when the pmd is compiled with OpenMP compiler option, such as `-fopenmp` in the case of gfortran.
+
+It is recommended to set it less than 8, and in the case of using 3-body force-fields 4 would be appropriate.
 
 ------------------------------------------------------------------------
 
@@ -172,11 +182,10 @@ Number of atom-configuration files to be written.
 - Default: `1`
 
 A flag whether or not to sort the order of atoms by tag before writing
-out atomic configurations to *pmd* files. It might cost some time for
-large scale simulation.
+out atomic configurations to a file.
 
-- `1` -- Do sorting
-- `2` -- Do not sorting
+- `0` -- Not to sort
+- `1` -- Heap sort
 
 ------------------------------------------------------------------------
 
@@ -296,6 +305,18 @@ indicates setting the temperature of *ifmv=1* to 300 K.
 - Default: `100.0`
 
 Relaxation time of Berendsen thermostat (fs).
+
+------------------------------------------------------------------------
+
+### remove_translation
+
+- Default: `0`
+
+Interval of removal of translational motion of the system.
+
+- N < 0 : not to remove translation
+- N == 0 : remove translation only at the beginning
+- N > 0 : remove translation at the beginning and every N step
 
 ------------------------------------------------------------------------
 
@@ -449,3 +470,22 @@ where the sum of these colr charges are zero in the system.
 - Default: `0d0  0d0  0d0`
 
 The field applied to color charges.
+
+------------------------------------------------------------------------
+
+### flag_lflux
+
+- Default: `.false.`
+
+Flag whether of not to measure the local flux of ions who are given finite color charges.
+The file `out.lflux` will be written.
+
+------------------------------------------------------------------------
+
+### ndiv_lflux
+
+- Default: `1   1   1`
+
+Number of division in each axis in a node. Thus the total number of divisions are obtained by multiplying number of parallel node in each axis.
+The information about local nodes are given at the top of `out.lflux`.
+

@@ -9,10 +9,17 @@ the Github site, [https://github.com/ryokbys/nap](https://github.com/ryokbys/nap
 
 ## Requirements
 
-*pmd* and *fitpot* can be executed in Unix/Linux, macOS X, and Windows with using the following tools,
+*pmd* and *fitpot* can be executed in Unix/Linux, macOS X (and Windows) with using the following compiler and library
+(list shows tested versions),
 
-- Fortran compiler (GNU's gfortran, Intel Fortran, PGI Fortran, or FUJITSU fortran)
-- MPI library (OpenMPI, or Intel MPI)
+- Fortran compiler
+    - GNU fortran (9.3.0)
+    - Intel Fortran (19.0.4.243)
+    - PGI Fortran (19.9)
+    - FUJITSU fortran (4.2.1)
+- MPI library
+    - OpenMPI (4.0.3)
+    - Intel MPI (19.0.4.243)
 
 
 *nappy* utility and *fp.py* program can be used with *Python-3.x.x*, and are dependent on some python packages such as,
@@ -30,7 +37,7 @@ the Github site, [https://github.com/ryokbys/nap](https://github.com/ryokbys/nap
 
 You can download `nap-master.zip` file from the site. And you can get
 `nap-master` directory when you unzip the zip file. For the ease of
-following explanation, change the directory name to `nap` as,
+following explanation, change the directory name to `nap`.
 
     $ unzip nap-master.zip
     $ mv nap-master nap
@@ -39,10 +46,7 @@ following explanation, change the directory name to `nap` as,
 Then you can compile *pmd* and *fitpot* programs as following,
 
     $ ./configure --prefix=$(pwd)
-    $ cd pmd
-    $ make pmd
-    $ cd ../fitpot
-    $ make fitpot
+    $ make pmd fitpot
 
 If you get an error of finding an MPI Fortran compiler when you are
 running `configure`, you have to find an MPI Fortran compiler or ask the system administrator and do `configure` again by specifying the path to the MPI Fortran compiler as,
@@ -84,6 +88,8 @@ options enabled as follows.
 !!! Note
     Compilation with LLVM version gcc is not tested. Use Homebrew version of gcc and openmpi.
 
+!!! Note
+    If the compilation stops with the errors "Type mismatch between ..." on MPI routines with using gcc version 10.x.x, you can skip the errors by adding the FCFLAGS option `-fallow-argument-mismatch`. This should not cause any change to pmd results.
 
 ### Intel Fortran compiler
 
@@ -104,27 +110,15 @@ you can use the compiler by just specifying the compiler path as,
 
 
 
-### Fujitsu Fortran in FX?
+### Fujitsu Fortran in Flow-FX
 
-It is easier to compile on the computation node not on the login node.
-Since there are some difference about configuring/compiling on those
-nodes. To configure and compile the *pmd*, first you need to login to a
-computation node by doing `pjsub --interact`.
+Since some time ago the compilation had become failed on computation node, so one has to compile on login node using cross-compilers as follows,
 
-    $ pjsub --interact
-    or
-    $ pjsub --interact -L rscgrp=fx-interactive,node=1  <== in case of flow-fx@nagoya-u
-    $ ./configure --prefix=$(pwd) FCFLAGS="-O3"
-    $ cd pmd
-    $ make pmd
+    $ ./configure --prefix=$(pwd) FCFLAGS="-Kfast" --host=sparc64
+    $ make pmd fitpot
     $ exit
 
-!!! Note
-    In case that the `configure` returns errors and exit without completing
-    the configuration and the error message is related to cross compilation,
-    you may need to add an option like `--host=sparc64` to the above command
-    line.
-
+The option `--host=sparc64` is required to specify which architecture is targeted by the execution file.
 
 ### Fujitsu Fortran in CX400
 
@@ -144,14 +138,23 @@ If you don\'t specify the `mpiifor` explicitly, `ifort` is set by
 default and the compilation does not work correctly.
 
 
+### Notes on OpenMP
+
+The OpenMP parallelization become available since v0.10.10 or rev210714. It is enabled if appropriate option is given for `FCFLAGS`, such as `-fopenmp` in the case of gfortran.
+
+The number of threads used by OpenMP must be provided by the environment variable `OMP_NUM_THREADS`, e.g.,
+
+    $ export OMP_NUM_THREADS=4
+
+Note that the parallelization by OpenMP is not very scaled, and currently (2021-07-14) it is recommended to set it about 4 or less than 8. And, if available, use other cores by MPI parallelization.
+
 ---
 
 ## Setup *nappy* (required for *fp.py*)
 
 To use *nappy* in python program, it is required to add a path to
-`nap/nappy` directory to the environment variable `PYTHONPATH`. In case
-of `bash`, you can achieve this by adding the following line to
-`~/.bash_profile`,
+`nap/nappy` directory to the environment variable `PYTHONPATH`.
+You can set this permanently by adding the following line to `~/.bash_profile` in case of *bash* and `~/.zshrc` in case of *zsh*,
 
 
     export PYTHONPATH=${PYTHONPATH}:/path/to/nap
@@ -167,9 +170,26 @@ the following command, :
 
 ## Tests
 
-There are some examples in `nap/examples/` directory and all the examples contains reference outputs that should be written out when programs are correctly perfomed.
+There are some examples in `nap/examples/` directory and all the examples contain reference outputs that should be written out when programs are correctly performed.
 
-### Test for *pmd* program
+### Quick test (available since v0.10.1 or rev201130)
+
+You can perform regresssion tests of *pmd* and *fitpot* programs as follows.
+
+    $ cd nap/
+    $ make test
+
+The test for *fp.py* can be performed by the following command from `nap/` directory, which could take a fiew minutes since it calls several MD runs in every iteration.
+
+    $ make test-fp
+
+If these tests are fine, they show messages like ` PASS: examples/xxxxx`, otherwise they will show `FAIL: examples/xxxx`.
+
+---
+
+## Examples used for above tests
+
+### Examples for *pmd*
 
 There are three examples for *pmd* program,
 
@@ -192,7 +212,7 @@ For example, the potential energies that can be extracted from `out.pmd.REF` as,
 are the potential energies of the system before and after the MD run. These should be identical in the test run.
 And also, kinetic energy, puressure and temperature of the system after the MD run are shown within the last 10 lines that can be used for the test.
 
-### Test for *fitpot* program
+### An example for *fitpot*
 
 In the `nap/examples/fitpot_DNN_SiO` directory, you can test the *fitpot* program by using *mpirun* command as,
 
@@ -202,7 +222,7 @@ by comparing its standard output with `out.fitpot.REF`.
 
 For example, RMSEs of energy, force and stress are shown in lines starting with `ENERGY:`, `FORCE:` and `STRESS:`, respectively, whose last values are within the last 10 lines. These values should be identical or resonably close in the test run.
 
-### Test for *fp.py* program
+### Examples for *fp.py*
 
 There are two examples for *fp.py* program,
 

@@ -102,7 +102,7 @@ In the **DF-matching mode**, the reference data formats of these targets
 are different.
 
 On the other hand, in the **any-target mode**, the format of reference
-data is fixed.
+data is identical in all targets.
 
 ### Reference data format in DF-matching mode
 

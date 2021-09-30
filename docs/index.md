@@ -19,6 +19,7 @@ This is a documentation of **Nagoya Atomistic-simulation Package
 
 ## How to cite nap
 
+- [R. Kobayashi, Journal of Open Source Software, 6(57), 2768 (2021)](https://joss.theoj.org/papers/10.21105/joss.02768) for *nap* package in general.
 - [R. Kobayashi, Y. Miyaji, K. Nakano, M. Nakayama, APL Materials 8, 081111 (2020)](https://aip.scitation.org/doi/10.1063/5.0015373) for *nap* package and/or *fp.py* program.
 - [Kobayashi, Ryo, Daniele Giofré, Till Junge, Michele Ceriotti, and William Arthur Curtin. Physical Review Materials 1, 53604--11 (2017)](https://journals.aps.org/prmaterials/abstract/10.1103/PhysRevMaterials.1.053604) for *fitpot* program and/or neural-network (NN) potential.
 

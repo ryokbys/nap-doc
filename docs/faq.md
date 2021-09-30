@@ -2,7 +2,19 @@
 
 ------------------------------------------------------------------------
 
-## There are not enough slots available...
+### How to convert CIF (any other format) to pmdini?
+
+First you can try to convert any file to pmdini by using *napsys.py* as,
+
+    $ napsys.py convert hoge pmdini
+
+If *napsys.py* can read the `hoge` file, it will be converted to `pmdini`.
+If not, one should convert the file to either `POSCAR` or `dump` using any converter program, and then convert it to `pmdini` using *napsys.py*.
+
+
+------
+
+### There are not enough slots available...
 
 If you get the following error message when you run `pmd` with some
 number of parallel processes,
@@ -27,7 +39,7 @@ Reference:
 
 ------------------------------------------------------------------------
 
-## A system call failed during shared memory initialization...
+### A system call failed during shared memory initialization...
 
 The following error message could appear at the end of `pmd` output,
 when the number of MPI processes and the number of automatically
@@ -53,3 +65,4 @@ Reference:
 -   <https://github.com/open-mpi/ompi/issues/6518>
 
 -------------
+

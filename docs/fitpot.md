@@ -99,16 +99,21 @@ from `vasprun.xml` file as follows, :
 
     $ python path/to/nap/nappy/vasp/vasprun2fp.py /path/to/dir/that/includes/vasprun.xml/
 
-Then you get directories with names like `#####` including `pos`,
-`erg.ref`, `frc.ref` and `strs.ref` files in them.
+Change `/path/to/dir/that/includes/vasprun.xml/` part according to your situation.
+Then you get the follwing files in the directory: `pos`, `erg.ref`, `frc.ref` and `strs.ref`. If you want to extract several sample data from one `vasprun.xml` which is the case for MD simulation or structure relaxation, add `--sequence` option to `vasprun2fp.py`. Then you get directories with names `####` where `#` is some digit such as `00010`, and the directories contain `pos`, `erg.ref`, `frc.ref` and `strs.ref` in them.
+
+You may have to specify species order by `--specorder=X,Y,Z` or something like that.
+
+For more detail, see the help by `vasprun2fp -h`.
+
 
 ### Prepare input files
 
 Inputs files needed for *fitpot* are the following:
 
 -   `in.fitpot`
--   `in.params.DNN`
--   `in.params.desc`
+-   `in.params.DNN` -- see [DNN force](force_fields/DNN.md) for details
+-   `in.params.desc` -- see [DNN force](force_fields/DNN.md) for details
 -   `in.params.Coulomb` in each `smpl_XXX` directory in some special
      cases
 
