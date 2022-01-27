@@ -27,7 +27,7 @@ Currently (2021-09-30), there are two choices for the descriptor: Behler-Parrine
 
 !!! Note
     The format of `in.params.desc` file has changed from the previous one at
-    around May 2019, where the species are written directly by their acronym
+    around May 2019 to the style where species are written directly by their acronym
     name such as *Si* not by species-ID (digit 1-9). If you want to use the
     previous-format `in.params.desc`, you should modify it by replacing
     species-ID with species name.
@@ -46,12 +46,20 @@ The format of `in.params.desc` using the symmetry functions is like the followin
     2    W   W   -0.700
     ...
 
--   1st line -- *number of speceis* and *number of
-    descriptors*.
--   The following lines have each descriptor information, the 1st entry is
-    the type of descriptor, 2nd and 3rd are species of interaction pair,
-    from the 4th to the end are parameters of the descriptor. The number
-    of parameters depend on the type of descriptor.
+- 1st line -- *number of speceis* and *number of descriptors*.
+- The following lines have each descriptor information, the 1st entry is
+  the type of descriptor, 2nd and 3rd are species of interaction pair,
+  from the 4th to the end are parameters of the descriptor. The number
+  of parameters depend on the type of descriptor.
+- The descriptor type defined by a number is as follows, where the types less than 100 are two-body, and greater or equal to 100 are three-body.
+
+    - `1` : Gaussian
+    - `2` : cosine
+    - `3` : polynomial
+    - `4` : Morse type
+    - `101` : angular-type1 (SW-type, not including fc(rjk))
+    - `102` : angular-type2 (BP symmetry-function type, including fc(rjk))
+
 
 ### Chebyshev polynomial as a descriptor
 
@@ -84,15 +92,11 @@ The *number of terms* should be 2 times (*num of 2-body terms* + *num of 3-body 
        3   20   10  10  5
      -3.64106023330479E-001 -1.0000E-01  1.0000E-01
      -2.01340565152879E+000 -1.0000E-01  1.0000E-01
+     ... (number of these lines should be the same as the number of NN weights)
 
--   Lines starting with `!` are comment lines. If any of special keyword
-    is found just after `!`, an option will be passed to the program.
--   The 1st entry of the 1st line following comments is the number of
-    hidden layers in the NN.
--   The 2nd entry is the number of nodes in 0-th layer, which is called
-    input layer.
--   The following digits are the number of nodes in hidden layers. The
-    number of these digits must be the same as the number of hidden
-    layers given by the 1st entry.
--   Following lines include weight value, lower and upper bounds, which
-    are only used in `fitpot`.
+- Lines starting with `!` are comment lines. If any of special keyword is found just after `!`, an option will be passed to the program.
+- The 1st entry of the 1st line following comments is the number of hidden layers in the NN.
+- The 2nd entry is the number of nodes in 0-th layer, which is called input layer.
+- The following digits are the number of nodes in hidden layers. The number of these digits must be the same as the number of hidden layers given by the 1st entry.
+- Following lines include weight value, lower and upper bounds. The number of lines must be equal to or more than the number of NN weights, which contains biases.
+  The lower and upper bounds are only used in *fitpot* not in *pmd*.

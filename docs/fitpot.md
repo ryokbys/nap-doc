@@ -249,6 +249,9 @@ are the following:
 - `sd`/`SD` -- Steepest descent algorithm which requires gradient information.
 - `cg`/`CG` -- Conjugate gradient algorithm which requires gradient information.
 - `bfgs`/`BFGS` -- Quasi-Newton method with BFGS. This requires gradient information.
+- `sgd`/`SGD` -- Stochastic gradient descent method. This computes loss and gradient information using only `batchsize_per_node` samples at a time,
+and update parameters using the information, instead of computing all the samples each time for updating parameters.
+It is considered to be better in the case where there are many samples and optimizing parameters.
 - `check_grad` -- Comparison of analytical derivative and numerical derivative. Use this to check the implemented analytical gradient.
 - `test`/`TEST` -- Just calculate function L and gradient of L w.r.t. fitting parameters.
 
@@ -443,6 +446,30 @@ Default: `12345.0`
 
 Random seed for the initialization of parameters. This random seed is
 only used for this purpose and does not affect random seed for the
-choice of training and test sets, which is affected by
-`random_seed`{.interpreted-text role="ref"}.
+choice of training and test sets, which is affected by `random_seed`.
 
+------------------------------------------------------------------------
+
+### sgd_rate_ini
+
+Default: `0.001`
+
+Initial or constant learning rate used in SGD.
+
+------------------------------------------------------------------------
+
+### sgd_rate_fin
+
+Default: `-0.001`
+
+If this value is positive, the learning rate in SGD linearly changes as iteration goes.
+If this is negative, contant learning rate is used.
+
+------------------------------------------------------------------------
+
+### batchsize_per_node
+
+Default: `1`
+
+Number of samples per node in a batch process of evaluation of loss function.
+Thus if the *fitpot* is performed in parallel, the number of batch samples becomes multiplied by the number of parallel nodes.

@@ -2,8 +2,15 @@
 
 ## Download
 
-Download the source code of current version of the whole packange from
+Type the following command in the terminal.
+```
+git clone https://github.com/ryokbys/nap.git
+```
+This will create a directory of name `nap` in the current working directory.
+
+Or download the source code of current version of the whole packange from
 the Github site, [https://github.com/ryokbys/nap](https://github.com/ryokbys/nap).
+
 
 ---
 
@@ -35,16 +42,15 @@ the Github site, [https://github.com/ryokbys/nap](https://github.com/ryokbys/nap
 
 ## Build *pmd* and *fitpot*
 
-You can download `nap-master.zip` file from the site. And you can get
-`nap-master` directory when you unzip the zip file. For the ease of
-following explanation, change the directory name to `nap`.
+If You downloaded `nap-master.zip` file from the site, you can get a `nap-master` directory when you unzip the zip file.
+For the ease of following explanation, change the directory name to `nap`.
 
     $ unzip nap-master.zip
     $ mv nap-master nap
-    $ cd nap/
 
 Then you can compile *pmd* and *fitpot* programs as following,
 
+    $ cd nap/
     $ ./configure --prefix=$(pwd)
     $ make pmd fitpot
 
@@ -151,6 +157,23 @@ Note that the parallelization by OpenMP is not very scaled, and currently (2021-
 ---
 
 ## Setup *nappy* (required for *fp.py*)
+
+### Since *rev220118* or *v0.10.12*
+
+At the root nap directory, type,
+```shell
+$ python setup.py sdist
+$ pip install -e .
+```
+Then the nappy-related commands, `napsys` and `napopt`, will be installed and you should be able to find them using `which` command.
+And also a python package `nappy` will be available. You can check by the following command.
+```shell
+$ python -c 'import nappy; print(nappy.__file__)'
+```
+
+
+
+### Before *rev220118* or *v0.10.12*
 
 To use *nappy* in python program, it is required to add a path to
 `nap/nappy` directory to the environment variable `PYTHONPATH`.

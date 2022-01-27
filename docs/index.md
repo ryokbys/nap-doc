@@ -4,16 +4,14 @@
 This is a documentation of **Nagoya Atomistic-simulation Package
 (nap)**.
 
--   **nap** is hosted at Github: <https://github.com/ryokbys/nap>
--   **nap** includes the following programs and utilities:
-    -   *pmd*: Fortran program of massively parallel molecular dynamics
-    -   *fitpot*: Fortran program for fitting the parameters of
-        neural-network potential
-    -   *fp.py*: Python script for fitting the parameters of classical
-        potentials
-    -   *nappy*: Python scripts for pre- and post-processing
--   **Nagoya** is the name of a city in Japan, where the project
-    started.
+- **nap** consists of the following programs and utilities:
+    - *pmd*: Fortran program of massively parallel molecular dynamics
+    - *fitpot*: Fortran program for fitting the parameters of neural-network potential
+    - *nappy*: Python scripts for pre- and post-processing, which also includes:
+        - *napsys.y or napsys*: converting or manipulating atom configuration
+        - *fp.py or napopt*: fitting the parameters of classical potentials
+- **nap** is hosted at Github: <https://github.com/ryokbys/nap>
+- **Nagoya** is the name of a city in Japan, where the project started.
 
 ------------------------------------------------------------------------
 
@@ -35,7 +33,8 @@ The **nap** is distributed under the MIT license, please see the license stateme
 
 **Ryo KOBAYASHI**  
 kobayashi.ryo [at] nitech.ac.jp  
-Department of Physical Science and Engineering, Nagoya Institute of Technology
+[Department of Physical Science and Engineering](http://phse.web.nitech.ac.jp/en/index.html),  
+[Nagoya Institute of Technology](https://www.nitech.ac.jp/eng/index.html)
 
 ------------------------------------------------------------------------
 

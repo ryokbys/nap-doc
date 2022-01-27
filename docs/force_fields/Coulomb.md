@@ -1,4 +1,4 @@
-# Coulomb potential (Ewald or short/screend)
+# Coulomb potential (Ewald or short/screened)
 
 Coulomb potential requires a parameter file `in.params.Coulomb`.
 Parameters required in the file are different depending on `charges` and `terms` entries.
@@ -79,22 +79,38 @@ Coulomb potential can treat **variable charge** or **QEq** by specifying
       Si  Si
       Si  O
       O   O
-    terms  short
-    sigma  2.5
-    conv_eps  1.0d-6
+    terms   screened_cut
+    sigma   2.5
+    chgopt_method   damping
+    codmp_method    damping
+    fdamp_codmp     0.7
+    conv_eps_qeq      1.0d-8
+    nstp_codmp      100
+    dt_codmp        0.005
+    qmass_codmp     0.002
+    qtot_codmp      0.0
+    
 
 Here, `charges variable` requires some following lines that have
 
     name,  chi,  Jii,  E0,  qlow,  qup
 
--   `name`: name of the chemical species
--   `chi`: electronegativity of the species (eV)
--   `Jii`: hardness of the species (eV)
--   `E0`: atomic energy (eV)
--   `qlow`: lower limit of the charge of the species
--   `qup`: upper limit of the charge of the species
--   `conv_eps`: Convergence criterion of the charge optimization. Usually it should
-    be very small to achieve good energy conservation.
+- `name`: name of the chemical species
+- `chi`: electronegativity of the species (eV)
+- `Jii`: hardness of the species (eV)
+- `E0`: atomic energy (eV)
+- `qlow`: lower limit of the charge of the species
+- `qup`: upper limit of the charge of the species
+
+And the meanings of the other parameters are listed below:
+
+- `chgopt_method`: The method of charge optimization: `damping` or `FIRE`. And the `codmp` pre/postfix indicates that the variables are related to `chgopt_method`==`damping`.The `FIRE` is known to be efficient, but it is sometimes unstable.
+- `fdamp_codmp`: Damping factor multiplied to velocities of charges every step in damping MD. (default: 0.7d0)
+- `conv_eps_qeq`: Convergence criterion of energy difference (eV/atom) from the previous step or one step before the previous step. The difference from the step before the previous step is used because sometimes charges oscillate and do not converge otherwise. (Default: 1.0d-8)
+- `nstp_codmp`: Max number of steps for damping MD. (Default: 100)
+- `dt_codmp`: Time interval for damping MD in fs. (Default: 0.005)
+- `qmass_codmp`: Mass of charge in the unit of proton mass. (Default: 0.002)
+- `qtot_codmp`: Total charge of the system in the unit of $e$. (Default: 0.0)
 
 
 [^Adams2011]: Adams, S. & Rao, R. P. High power lithium ion battery materials by computational design. Phys. Status Solidi  208, 1746–1753 (2011).

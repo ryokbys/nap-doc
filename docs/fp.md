@@ -1,11 +1,11 @@
-# fp.py -- fit parameters of classical potentials
+# fp.py or napopt --- fit parameters of classical potentials or anything
 
-The python program *fp.py* is another program of fitting potential
+The python program *fp.py* (or *napopt*) is another program of fitting potential
 parameters. The *fitpot* focuses on the neural-network (NN) potential,
 on the other hand, this *fp.py* focuses on classical potentials that
-have much less potential parameters compared to NN potential, usually
+have much less potential parameters compared to the NN potential, usually
 less than 100. Since the number of parameters to be optimized is small,
-*fp.py* employs meta-heuristic or nature-inspired methods, which can
+*fp.py* employs meta-heuristic, nature-inspired or Bayesian-optimization method, which can
 adopt any physical value as a learning target since derivatives of the
 target values w.r.t. optimizing parameters are not required.
 
@@ -13,15 +13,15 @@ target values w.r.t. optimizing parameters are not required.
 
 ## Setup
 
-To use *fp.py*, you should check if *nappy* works correctly, since
-*fp.py* is actually a part of *nappy* package (*fp.py* exists at
-`nap/nappy/fitpot/fp.py`). See [nappy_setup](./nappy.md#setup) of *nappy* package.
+See [Install](./install.md) for the setup of *nappy*.
+Once *nappy* is installed, the command *napopt* will be available.
+*napopt* calls *fp.py* python program at *nap/nappy/fitpot/fp.py*, so directory calling *fp.py* should work as well.
 
 ------------------------------------------------------------------------
 
-## What does fp.py do?
+## What does fp.py/napopt do?
 
-In the *fp.py*, the following loss function is minimized by optimizing
+In the *fp.py/napopt*, the following loss function is minimized by optimizing
 potential parameters,
 
 $$\mathcal{L} = \sum_t \mathcal{L}_t$$
@@ -39,11 +39,10 @@ $$\mathcal{L}_\mathrm{R} = \frac{1}{N_p} \sum_p^{N_p} \left( \frac{\sum_i^{N_\ma
 where $N_p$ is the number of RDF pairs to be considered, $N_\mathrm{R}$
 is the number of sampling points of RDF.
 
-To minimize the above loss function, the following metaheuristic methods
-are available:
+To minimize the above loss function, the following methods are available:
 
--   Cuckoo search (CS)
--   Differential evolution (DE)
+- Cuckoo search (CS)
+- Weighted Tree-structured Parzen Estimator (WPE)
 
 ------------------------------------------------------------------------
 
@@ -51,20 +50,24 @@ are available:
 
 There are two examples of *fp.py* in `nap/examples/`,
 
--   `fp_LZP/` -- fitting of parameters of Morse, Coulomb and SW-like
-    angular potentials to RDF, angular distribution function (ADF) and
-    equilibrium volume of Li-Zr-P-O system.
--   `fp_LATP/` -- fitting of parameters of Morse, Coulomb and SW-like
-    angular potentials to RDF, ADF and equilibrium volume of
-    Li-Al-Ti-P-O system.
+- `fp_LZP/` -- fitting of parameters of Morse, Coulomb and SW-like
+  angular potentials to RDF, angular distribution function (ADF) and
+  equilibrium volume of Li-Zr-P-O system.
+- `fp_LATP/` -- fitting of parameters of Morse, Coulomb and SW-like
+  angular potentials to RDF, ADF and equilibrium volume of
+  Li-Al-Ti-P-O system.
 
-In either of these two directories, you can try *fp.py* by running the
-following command,
+In either of these two directories, you can try *fp.py* by running the following command,
 
     $ python /path/to/nap/nappy/fitpot/fp.py --nproc 4 | tee out.fp
 
 This could take a few minutes using 4 processes. And you can see some
 output files written by *fp.py*. See how to discuss [result](#results-and-outputs).
+
+You can also do the same as,
+
+    $ napopt --nproc 4 | tee out.fit
+
 
 ------------------------------------------------------------------------
 
@@ -73,18 +76,18 @@ output files written by *fp.py*. See how to discuss [result](#results-and-output
 As you can see in `nap/examples/fp_LZP/` or `nap_examples/fp_LATP/`,
 there are several files needed to run the *fp.py* program.
 
--   `in.fitpot` -- *fp.py* configuration file
--   `in.vars.fitpot` -- optimizing parameter file
--   `in.params.XXX` -- potential parameter files that are not
-    actually used during optimization, except that `in.params.Coulomb`
-    must exist becuase charge information of each element is read from
-    it.
--   `data.ref.XXX` -- Reference data file
--   `subjob.sh` -- Shell-script file to perform sub jobs
--   Files needed to perform sub jobs:
-    -   `pmdini` -- atom configuration file (cell info, positions,
-        and velocities)
-    -   `in.pmd.NpT` -- input file for *pmd*
+- `in.fitpot` -- *fp.py* configuration file
+- `in.vars.fitpot` -- optimizing parameter file
+- `in.params.XXX` -- potential parameter files that are not
+  actually used during optimization, except that `in.params.Coulomb`
+  must exist becuase charge information of each element is read from
+  it.
+- `data.ref.XXX` -- Reference data file
+- `subjob.sh` -- Shell-script file to perform sub jobs
+- Files needed to perform sub jobs:
+  - `pmdini` -- atom configuration file (cell info, positions,
+    and velocities)
+  - `in.pmd.NpT` -- input file for *pmd*
 
 ## Reference data for fp.py
 
@@ -93,10 +96,10 @@ indicates the type of target quantity, such as `rdf`, `adf`, `vol`, etc.
 
 Currently (July 2020), *fp.py* can run in two different modes,
 
--   **distribution function (DF)-matching mode** -- RDF, ADF,
-    equilibrium volume and lattice constants are adopted as targets.
--   **any-target mode** -- any quantity that is computable can be used
-    as a target.
+- **distribution function (DF)-matching mode** -- RDF, ADF,
+  equilibrium volume and lattice constants are adopted as targets.
+- **any-target mode** -- any quantity that is computable can be used
+  as a target.
 
 In the **DF-matching mode**, the reference data formats of these targets
 are different.
@@ -120,12 +123,9 @@ The format of reference data as follows, :
         0.7890   0.8901  0.9012  0.0123  0.1234  0.2345
         ...
 
--   Lines begining with `#` **at the head of the file** are treated as
-    comment lines.
--   1st line -- `NDAT` the number of data, `WGT` the weight for this
-    target.
--   2nd line and later -- data, no limitation to the number of entries
-    in a line, but it is recommended to include 6 entries in a line.
+- Lines begining with `#` **at the head of the file** are treated as comment lines.
+- 1st line -- `NDAT` the number of data, `WGT` the weight for this target.
+- 2nd line and later -- data, no limitation to the number of entries in a line, but it is recommended to include 6 entries in a line.
 
 ## Input file in.fitpot
 
@@ -141,10 +141,10 @@ First, in the case of **any-target mode**, the `in.fitpot` in the example
 
     fitting_method   cs
     sample_directory "./"
-    param_file in.vars.fitpot
 
     match     rdf adf vol
     potential   BVSx
+    # param_files  in.params.Coulomb  in.params.Morse
 
     cs_num_individuals   20
     cs_fraction          0.25
@@ -163,34 +163,25 @@ First, in the case of **any-target mode**, the `in.fitpot` in the example
       P   O  O
 
 
--   `num_iteration` -- Number of iterations (generations) to be
-    computed
--   `print_level` -- Frequency of output \[default: `1`\]
--   `fitting_method` -- Optimization algorithm \[default: `cs`\]
--   `sample_directory` -- Directory where the reference data,
-    `data.ref.XXX`, exist.
--   `param_file` -- Parameter file that contains initial values and
-    ranges.
--   `match xxx yyy zzz` -- List of quantities used as optimization
-    targets
--   `potential` -- Potential type whose parameters to be optimized.
-    Currently available potentials are Morse, BVS, and BVSx.
--   `cs_XXXX` -- Parameters related to CS.
-    -   `cs_num_individuals` -- Number of individuals (nests) in a
-        generation.
-    -   `cs_fraction` -- Fraction of abandons in a generation.
--   `update_vrange` --
--   `fval_upper_limit` -- Upper limit of loss function. The loss
-    functions above this limit is set to this value.
--   `specorder` -- Order of species used in reference and MD program.
--   `interaction` -- Pairs and triples that are taken into account for
-    optimization.
+- `num_iteration` -- Number of iterations (generations) to be computed
+- `print_level` -- Frequency of output \[default: `1`\]
+- `fitting_method` -- Optimization algorithm \[default: `cs`\]
+- `sample_directory` -- Directory where the reference data, `data.ref.XXX`, exist.
+- `match xxx yyy zzz` -- List of quantities used as optimization targets
+- `potential` -- Potential type whose parameters to be optimized. Currently available potentials are Morse, BVS, and BVSx.
+- `param_files` -- Instead of specifying `potential`, parameter files can be directly specified, which is more flexible and recommended in the version since *rev211111*.
+- `cs_XXXX` -- Parameters related to CS.
+  - `cs_num_individuals` -- Number of individuals (nests) in a generation.
+  - `cs_fraction` -- Fraction of abandons in a generation.
+- `update_vrange` -- Update variable search range every `update_vrange` step.
+- `fval_upper_limit` -- Upper limit of loss function. The loss functions above this limit is set to this value.
+- `specorder` -- Order of species used in reference and MD program.
+- `interaction` -- Pairs and triples that are taken into account for optimization.
 
 ## Parameter file in.vars.fitpot
 
 The parameter file `in.vars.fitpot` contains initial values and ranges
-of each parameter to be explored. The file can be specified by
-`param_file` in `in.fitpot` file.
+of each parameter to be explored.
 
     #  hard-limit:   T
     #
@@ -207,18 +198,27 @@ of each parameter to be explored. The file can be specified by
          1.4407     1.2000     2.0000     0.100   10.000
 
 
--   Lines begin with `#` at the head of the file are treated as comment
-    lines.
--   `hard-limit:  T` in comment line is a optional setting. The
-    `hard-limit` set additional hard limit for parameters for automatic
-    update of the search range.
--   1st line -- Number of optimizing parameters `NVAR`, cutoff radius
-    for 2-body potential `RCUT2`, and cutoff for 3-body potential
-    `RCUT3`, respectively.
--   2nd line and later -- initiall value, soft-limit (lower and upper),
-    hard-limit (lower and upper), respectively. If `hard-limit: F`
-    (hard-limit is not set), entries for hard-limit are not required in
-    a line.
+- Lines begin with `#` at the head of the file are treated as comment lines.
+- `hard-limit:  T` in comment line is a optional setting. The `hard-limit` set additional hard limit for parameters for automatic update of the search range.
+- 1st line -- Number of optimizing parameters `NVAR`, cutoff radius for 2-body potential `RCUT2`, and cutoff for 3-body potential `RCUT3`, respectively.
+- 2nd line and later -- initiall value, soft-limit (lower and upper), hard-limit (lower and upper), respectively. If `hard-limit: F` (hard-limit is not set), entries for hard-limit are not required in a line.
+
+## Parameter files in.params.XXX used to run subjobs
+
+This is only the case when specifying `param_files` instead of specifying `potential` in `in.fitpot`.
+
+The key-words, `{p[#]}` where `#` is a number, in the parameter files specified by `param_files` are to be replaced with the optimizing parameters in `in.vars.fitpot`.
+The example of `in.params.Morse` is as follows:
+
+```text
+# cspi, cspj,    D,      alpha,     rmin
+  Li    O     {p[4]}     {p[5]}     {p[6]}
+  Zr    O     {p[7]}     {p[8]}     {p[9]}
+  P     O     {p[10]}    {p[11]}    {p[12]}
+```
+
+Therefore, using `param_files`, users can optimize parameters of not only pmd but also of any program with *fp.py*.
+
 
 ## Subjob script subjob.sh
 
@@ -253,14 +253,10 @@ evaluating the loss function of each nest (individual). :
     echo "post-processing done at" `date`
 
 
--   `--pairs` and `--triplets` should be correctly set in `rdf.py` and
-    `adf.py` as well as `--specorder` options.
--   `--out4fp` option is required to write **any-target mode** format of
-    reference data. On the other hand, in the case of **DF-matching
-    mode**, `--out4fp` option should not be used.
+- `--pairs` and `--triplets` should be correctly set in `rdf.py` and `adf.py` as well as `--specorder` options.
+- `--out4fp` option is required to write **any-target mode** format of reference data. On the other hand, in the case of **DF-matching mode**, `--out4fp` option should not be used.
 
 ## in.pmd file in the subjob
-
 
 Here is an example of `in.pmd` file used in *subjob* of each individual
 (nest), acually named `in.pmd.NpT` in `nap/examples/fp_LATP`.
@@ -318,27 +314,21 @@ read those data files to evaluate the loss function of each individual
     $ python ~/src/nap/fitpot/fp.py --nproc 4 | tee out.fp
 
 
--   `--nproc` sets number of processes used for the evaluation of
-    individuals.
--   `--subjob-script` option sets which script file is used for to
-    perform subjob. [default: `subjob.sh`]
--   `--subdir` option sets the prefix of directories where the subjobs
-    are performed. [default: `subdir`]
+- `--nproc` sets number of processes used for the evaluation of individuals.
+- `--subjob-script` option sets which script file is used for to perform subjob. [default: `subjob.sh`]
+- `--subdir` option sets the prefix of directories where the subjobs are performed. [default: `subdir`]
 
 ## Results and outputs
 
 
 Files and directories created by *fp.py* are,
 
--   `out.fp` -- Standard output.
--   `out.cs.generations` -- Information of generations.
--   `out.cs.individuals` -- Information of all the individuals.
--   `in.vars.fitpot.####` -- Parameter file that is written whenever
-    the best individual is updated.
--   `in.vars.fitpot.best` -- Parameter file of the best individual in
-    the run.
--   `subdir_###` -- Directories used for the calculations of
-    individuals. You can remove these directories after the run.
+- `out.fp` -- Standard output.
+- `out.cs.generations` -- Information of generations.
+- `out.cs.individuals` -- Information of all the individuals.
+- `in.vars.fitpot.####` -- Parameter file that is written whenever the best individual is updated.
+- `in.vars.fitpot.best` -- Parameter file of the best individual in the run.
+- `subdir_###` -- Directories used for the calculations of individuals. You can remove these directories after the run.
 
 
 ### Convert *fp.py* parameter file to *pmd* parameter files
@@ -359,9 +349,8 @@ optimization as a function of generation using *gnuplot* as, :
     gnuplot> set xlabel 'Generation'
     gnuplot> p 'out.cs.generations' us 1:3 w p pt 5
 
--   Check if the loss function converges.
--   Check that the minimum loss function value is sufficiently small
-    (below 0.01 per target would be good enough).
+- Check if the loss function converges.
+- Check that the minimum loss function value is sufficiently small (below 0.01 per target would be good enough).
 
 ### Visualize the distribution of each parameters
 

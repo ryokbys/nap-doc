@@ -12,7 +12,7 @@ See [Install](./install.md).
 
 ## Quick start
 
-### `napsys.py` command
+### `napsys.py` command (older than *rev220118* or *v0.10.12*)
 
 Once *nappy* is installed correctly, you can use `napsys.py` as an utility command.
 
@@ -33,6 +33,10 @@ To show the help message,
 ```bash
 $ napsys.py -h
 ```
+
+### Since *rev220118* or *v0.10.12*
+
+Once *nappy* is installed using *pip* as described in the [Install](./install.md) section, `napsys` is placed in the command search scope and you will be able to use `napsys` without  making symlink to `napsys.py`. Thus, it is recommended.
 
 ---
 

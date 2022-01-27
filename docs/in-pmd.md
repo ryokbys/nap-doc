@@ -300,6 +300,15 @@ indicates setting the temperature of *ifmv=1* to 300 K.
 
 ------------------------------------------------------------------------
 
+### temperature_limit
+
+- Default: `1.0d+4`
+
+The limit of temperature used to check whether the MD is running correctly.
+Once the system temperature exceeds this limit, *pmd* stops with an error message.
+
+------------------------------------------------------------------------
+
 ### temperature_relax_time
 
 - Default: `100.0`
